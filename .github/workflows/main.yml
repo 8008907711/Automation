@@ -1,32 +1,26 @@
-#publish GitHub workflow  actions Artifact example
-name: publish GitHub actions Artifact example
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main] 
-    
-jobs: 
+jobs:
+  test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['8', '10', '12']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
 
-  archive-build-artifacts:
-    runs-on: windows-latest
     steps:
-    
-      - name: step 1 - create temporary artifact downloads folder  
-        run: mkdir downloads
-      
-      - name: step2 - Add artifacts to publish to the temp folder
-        run: |
-          cd downloads
-          echo 'alpha' > alpha.html
-          echo 'beta'  > beta.html
-          echo 'gamma' > gamma.html
-          cd ..
-                
-      - name: step 3 - use the upload artifact github action
-        uses: actions/upload-artifact@v2
-        with:
-            name: assets-for-download
-            path: downloads
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node_version }}
 
+    - name: npm install, build and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm test
