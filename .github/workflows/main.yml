@@ -1,25 +1,26 @@
-on 
-  push:
-    branches: [ main ]
+#publish GitHub workflow  actions Artifact example
+name: publish GitHub actions Artifact example
+
   
 jobs: 
   archive-build-artifacts:
     runs on : ubuntu-latest
     steps:
     
-      -name: step 1 - create temporary artifact downloads folder  
-      -run: mkdir downloads
+      - name: step 1 - create temporary artifact downloads folder  
+      - run: mkdir downloads
       
-      -name: step2 -Add artifacts to publish to the temp folder
-       run:|
-        cd downloads
-        echo 'alpha' > alpha.html
-        echo 'beta'  > beta.html
-        echo 'gamma' > gamma.html
-        cd..
+      - name: step2 -Add artifacts to publish to the temp folder
+        run: |
+          cd downloads
+          echo 'alpha' > alpha.html
+          echo 'beta'  > beta.html
+          echo 'gamma' > gamma.html
+          cd ..
         
-      -name: step 3 - use the upload artifact github action
-       uses: actions/upload-artifact@v2
-       with:
-        name: assets-for-download
-        path:downloads
+        
+      - name: step 3 - use the upload artifact github action
+        uses: actions/upload-artifact@v2
+         with: 
+           name: assets-for-download
+           path: downloads
